@@ -33,3 +33,15 @@ obj-y				+= ti/
 obj-$(CONFIG_ARCH_U8500)	+= ux500/
 obj-$(CONFIG_PLAT_VERSATILE)	+= versatile/
 obj-y				+= xilinx/
+
+#ifdef VENDOR_EDIT
+obj-$(CONFIG_OPLUS_SYSTEM_KERNEL)	+= oplus/system/
+#endif /* VENDOR_EDIT */
+
+#ifdef OPLUS_FEATURE_TP_BASIC
+obj-y				+= oplus/device_info/
+#endif /*OPLUS_FEATURE_TP_BASIC*/
+
+#ifdef OPLUS_FEATURE_SENSOR_SMEM
+obj-$(CONFIG_OPLUS_FEATURE_SENSOR_CFG) += oplus/sensor/
+#endif

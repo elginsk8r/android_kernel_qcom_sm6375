@@ -1379,4 +1379,9 @@ config TOUCHSCREEN_ZINITIX
 	  To compile this driver as a module, choose M here: the
 	  module will be called zinitix.
 
+#ifdef OPLUS_FEATURE_TP_BASIC
+source "drivers/input/touchscreen/touch_custom/Kconfig"
+source "drivers/input/touchscreen/oplus_touchscreen_v2/Kconfig"
+#endif /*OPLUS_FEATURE_TP_BASIC*/
+
 endif

@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# This config refers to the generic oplus debug mode.
+
+config OPLUS_DEBUG
+	bool "oplus debug"
+	depends on OPLUS_SYSTEM_KERNEL_QCOM || OPLUS_SYSTEM_KERNEL_MTK
+	help
+	  define this config to Distinguish between qcom and mtk platform
+
+if OPLUS_DEBUG
+
+config OPLUS_SLUB_DEBUG
+	bool "oplus slub debug"
+	select SLUB_DEBUG
+	select SLUB_DEBUG_ON
+	select SLUB_DEBUG_PANIC_ON
+	default y if "$(OPLUS_SLUB_TEST)" = "true"
+	default n
+
+config OPLUS_PAGEOWNER_DEBUG
+	bool "oplus pageowner debug"
+	select PAGE_OWNER
+	select PAGE_OWNER_ENABLE_DEFAULT
+	default y if "$(OPLUS_PAGEOWNER_TEST)" = "true"
+	default n
+
+endif # OPLUS_DEBUG

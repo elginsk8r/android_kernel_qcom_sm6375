@@ -469,6 +469,13 @@ config UID_SYS_STATS
 	  Per UID based io statistics exported to /proc/uid_io
 	  Per UID based procstat control in /proc/uid_procstat
 
+config OPLUS_FEATURE_UID_PERF
+	bool "Per-TASK perf_event statistics"
+	depends on UID_SYS_STATS
+	default n
+	help
+	  Per TASK based on perf_event
+
 config HISI_HIKEY_USB
 	tristate "USB GPIO Hub on HiSilicon Hikey 960/970 Platform"
 	depends on (OF && GPIOLIB) || COMPILE_TEST
@@ -521,6 +528,32 @@ config BOOTMARKER_PROXY
 	  These callback functions can be used to access the place marker.
 	  To compile this driver as a module, choose M here.
 	  If unsure, say N.
+
+
+#ifdef OPLUS_FEATURE_TP_BASIC
+config SIM_DETECT
+	tristate "SIM_DETECT system"
+	default n
+	help
+	  Say Y here to enable sim detect system support
+#endif /* OPLUS_FEATURE_TP_BASIC */
+
+#ifdef OPLUS_FEATURE_RF_CALBLE
+config OPLUS_RF_CABLE_MONITOR
+	bool "OPLUS rf cable monitor system"
+	depends on OF
+	select PINMUX
+	default n
+	help
+	  Say Y here to enable OPLUS rf cable monitor system support
+#endif /* OPLUS_FEATURE_RF_CALBLE */
+config OPLUS_RF_CABLE_DETECT
+	bool "OPLUS rf cable monitor system"
+	depends on OF
+	select PINMUX
+	default n
+	help
+	  Say Y here to enable OPLUS rf cable monitor system support
 
 source "drivers/misc/c2port/Kconfig"
 source "drivers/misc/eeprom/Kconfig"

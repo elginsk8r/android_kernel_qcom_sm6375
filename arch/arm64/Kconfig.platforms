@@ -162,6 +162,15 @@ config ARCH_MEDIATEK
 	  This enables support for MediaTek MT27xx, MT65xx, MT76xx
 	  & MT81xx ARMv8 SoCs
 
+#ifdef CONFIG_OPLUS_SYSTEM_KERNEL
+config OPLUS_SYSTEM_KERNEL_MTK
+	bool "config oplus system feature "
+	depends on ARCH_MEDIATEK
+	default n
+	help
+	  define this config to Distinguish between qcom and mtk platform
+#endif	
+
 config ARCH_MESON
 	bool "Amlogic Platforms"
 	help
@@ -391,6 +400,15 @@ config ARCH_NEO
 	  This enables support for the Qualcomm Technologies, Inc.'s
 	  NEO chipset. If you do not wish to build a kernel that
 	  runs on this chipset or if you are unsure, say 'N' here.
+
+#ifdef CONFIG_OPLUS_SYSTEM_KERNEL
+config OPLUS_SYSTEM_KERNEL_QCOM
+	bool "config oplus system feature "
+	depends on ARCH_QCOM
+	default y
+	help
+	  define this config to Distinguish between qcom and mtk platform
+#endif	
 
 config ARCH_REALTEK
 	bool "Realtek Platforms"

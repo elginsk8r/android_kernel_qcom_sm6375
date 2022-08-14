@@ -65,3 +65,13 @@ obj-$(CONFIG_VCPU_STALL_DETECTOR)	+= vcpu_stall_detector.o
 obj-$(CONFIG_UID_SYS_STATS)	+= uid_sys_stats.o
 obj-$(CONFIG_QSEECOM_PROXY) 	+= qseecom_proxy.o
 obj-$(CONFIG_BOOTMARKER_PROXY) 	+= bootmarker_proxy.o
+
+#ifdef OPLUS_FEATURE_TP_BASIC
+obj-$(CONFIG_SIM_DETECT)	+= sim_detect.o
+#endif
+
+#ifdef OPLUS_FEATURE_RF_CALBLE
+oplus_bsp_rfcablemonitor-y			:= oplus_rf_cable_monitor.o
+obj-$(CONFIG_OPLUS_RF_CABLE_MONITOR)	+= oplus_bsp_rfcablemonitor.o
+obj-$(CONFIG_OPLUS_RF_CABLE_DETECT) += op_ant_detect.o
+#endif /* OPLUS_FEATURE_RF_CALBLE */

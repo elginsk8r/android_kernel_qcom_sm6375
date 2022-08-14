@@ -160,4 +160,8 @@
 /* QNOVO5 */
 #define PSY_IIO_VOLTAGE_QNOVO       0x7e
 #define PSY_IIO_CURRENT_QNOVO       0x7f
+
+//#ifdef OPLUS_FEATURE_CHG_BASIC
+#define PSY_IIO_PD_SDP				0xa0
+//#endif
 #endif /* __QTI_POWER_SUPPLY_IIO_H__ */

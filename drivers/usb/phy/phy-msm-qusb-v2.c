@@ -852,6 +852,10 @@ static int qusb_phy_notify_disconnect(struct usb_phy *phy,
 
 	qphy->cable_connected = false;
 
+#ifdef OPLUS_FEATURE_CHG_BASIC
+	qphy->tune_val = 0;
+#endif
+
 	dev_dbg(phy->dev, "QUSB PHY: connect notification cable_connected=%d\n",
 							qphy->cable_connected);
 	return 0;
