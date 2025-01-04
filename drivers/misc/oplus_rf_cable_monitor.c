@@ -94,7 +94,7 @@ enum {
 //=====================================
 static ssize_t cable_read_proc(struct file *file, char __user *buf, size_t count, loff_t *off)
 {
-    struct rf_cable_data *rf_data = PDE_DATA(file_inode(file));
+    struct rf_cable_data *rf_data = pde_data(file_inode(file));
     char page[128] = {0};
     int len = 0;
     int i;
@@ -133,7 +133,7 @@ static ssize_t cable_read_proc(struct file *file, char __user *buf, size_t count
 
 static ssize_t pds_read_proc(struct file *file, char __user *buf, size_t count, loff_t *off)
 {
-    struct rf_cable_data *rf_data = PDE_DATA(file_inode(file));
+    struct rf_cable_data *rf_data = pde_data(file_inode(file));
     char page[128] = {0};
     int len = 0;
     int i;

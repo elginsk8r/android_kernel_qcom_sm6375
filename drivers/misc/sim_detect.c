@@ -48,7 +48,7 @@ static ssize_t proc_sim_detect_read(struct file *file,
 	int ret = 0;
 	char page[25] = {0};
 	int sim_detect_value = -1;
-	struct sim_detect_data *sim_detect_data = PDE_DATA(file_inode(file));
+	struct sim_detect_data *sim_detect_data = pde_data(file_inode(file));
 
 	if (!sim_detect_data)
 		return 0;

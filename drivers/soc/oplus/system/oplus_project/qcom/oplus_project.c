@@ -517,7 +517,7 @@ unsigned int get_cdt_version(void)
 
 static int projects_open(struct inode *inode, struct file *file)
 {
-    return single_open(file, project_read_func, PDE_DATA(inode));
+    return single_open(file, project_read_func, pde_data(inode));
 }
 
 static const struct file_operations project_info_fops = {

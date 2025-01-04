@@ -25,7 +25,7 @@ static ssize_t nvt_flash_read(struct file *filp, char __user *buff,
 	int8_t i2c_wr = 0;
 	unsigned short addr_tmp = 0;
 
-	struct touchpanel_data *ts = PDE_DATA(file_inode(filp));
+	struct touchpanel_data *ts = pde_data(file_inode(filp));
 
 	if (count > sizeof(str)) {
 		TPD_INFO("error count=%zu\n", count);
@@ -120,7 +120,7 @@ static ssize_t nvt_noflash_read(struct file *filp, char __user *buff,
 	uint8_t *buf = NULL;
 	int rw_len;
 
-	struct touchpanel_data *ts = PDE_DATA(file_inode(filp));
+	struct touchpanel_data *ts = pde_data(file_inode(filp));
 
 	if (count > SPI_TANSFER_LEN + 2 || count < 2) {
 		return -EFAULT;

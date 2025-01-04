@@ -275,7 +275,7 @@ static ssize_t ilitek_proc_get_delta_data_read(struct file *pFile,
 	int read_length = 0;
 	u8 cmd[2] = {0};
 	u8 *data = NULL;
-	struct ilitek_tddi_dev *chip_info = PDE_DATA(file_inode(pFile));
+	struct ilitek_tddi_dev *chip_info = pde_data(file_inode(pFile));
 
 	if (*pos != 0) {
 		return 0;
@@ -384,7 +384,7 @@ static ssize_t ilitek_proc_fw_get_raw_data_read(struct file *pFile,
 	int read_length = 0;
 	u8 cmd[2] = {0};
 	u8 *data = NULL;
-	struct ilitek_tddi_dev *chip_info = PDE_DATA(file_inode(pFile));
+	struct ilitek_tddi_dev *chip_info = pde_data(file_inode(pFile));
 
 	if (*pos != 0) {
 		return 0;
@@ -488,7 +488,7 @@ static ssize_t ilitek_proc_fw_pc_counter_read(struct file *pFile,
 		char __user *buf, size_t size, loff_t *pos)
 {
 	int pc;
-	struct ilitek_tddi_dev *chip_info = PDE_DATA(file_inode(pFile));
+	struct ilitek_tddi_dev *chip_info = pde_data(file_inode(pFile));
 
 	if (*pos != 0) {
 		return 0;
@@ -517,7 +517,7 @@ static ssize_t ilitek_proc_rw_tp_reg_read(struct file *pFile, char __user *buf,
 	int ret = 0;
 	bool mcu_on = 0, read = 0;
 	u32 type, addr, read_data, write_data, write_len, stop_mcu;
-	struct ilitek_tddi_dev *chip_info = PDE_DATA(file_inode(pFile));
+	struct ilitek_tddi_dev *chip_info = pde_data(file_inode(pFile));
 
 	if (*pos != 0) {
 		return 0;
@@ -592,7 +592,7 @@ static ssize_t ilitek_proc_rw_tp_reg_write(struct file *filp, const char *buff,
 	char *token = NULL, *cur = NULL;
 	char cmd[256] = { 0 };
 	u32 count = 0;
-	struct ilitek_tddi_dev *chip_info = PDE_DATA(file_inode(filp));
+	struct ilitek_tddi_dev *chip_info = pde_data(file_inode(filp));
 
 	if (buff != NULL) {
 		if (copy_from_user(cmd, buff, size - 1)) {
@@ -617,7 +617,7 @@ static ssize_t ilitek_proc_debug_switch_read(struct file *filp,
 {
 	int ret = 0;
 	int i = 0;
-	struct ilitek_tddi_dev *chip_info = PDE_DATA(file_inode(filp));
+	struct ilitek_tddi_dev *chip_info = pde_data(file_inode(filp));
 
 	if (*pos != 0) {
 		return 0;
@@ -697,7 +697,7 @@ static ssize_t ilitek_proc_debug_message_read(struct file *filp,
 	int type = 0;
 	unsigned char *tmpbuf = NULL;
 	unsigned char tmpbufback[128] = {0};
-	struct ilitek_tddi_dev *chip_info = PDE_DATA(file_inode(filp));
+	struct ilitek_tddi_dev *chip_info = pde_data(file_inode(filp));
 
 	mutex_lock(&chip_info->debug_read_mutex);
 
@@ -823,7 +823,7 @@ static ssize_t ilitek_proc_get_debug_mode_data_read(struct file *filp,
 	int ret;
 	u8 tp_mode;
 	struct file_buffer csv;
-	struct ilitek_tddi_dev *chip_info = PDE_DATA(file_inode(filp));
+	struct ilitek_tddi_dev *chip_info = pde_data(file_inode(filp));
 
 	if (*pos != 0) {
 		return 0;
@@ -906,7 +906,7 @@ static ssize_t ilitek_proc_get_debug_mode_data_write(struct file *filp,
 	char *token = NULL, *cur = NULL;
 	char cmd[256] = {0};
 	u8 temp[256] = {0}, count = 0;
-	struct ilitek_tddi_dev *chip_info = PDE_DATA(file_inode(filp));
+	struct ilitek_tddi_dev *chip_info = pde_data(file_inode(filp));
 
 	if (buff != NULL) {
 		if (copy_from_user(cmd, buff, size - 1)) {
@@ -938,7 +938,7 @@ static ssize_t ilitek_proc_fw_process_read(struct file *filp, char __user *buff,
 {
 	int ret = 0;
 	u32 len = 0;
-	struct ilitek_tddi_dev *chip_info = PDE_DATA(file_inode(filp));
+	struct ilitek_tddi_dev *chip_info = pde_data(file_inode(filp));
 
 	if (*pos != 0) {
 		return 0;
@@ -1022,7 +1022,7 @@ static ssize_t ilitek_node_fw_upgrade_read(struct file *filp, char __user *buff,
 {
 	int ret = 0;
 	u32 len = 0;
-	struct ilitek_tddi_dev *chip_info = PDE_DATA(file_inode(filp));
+	struct ilitek_tddi_dev *chip_info = pde_data(file_inode(filp));
 
 	TPD_INFO("Preparing to upgarde firmware\n");
 
@@ -1058,7 +1058,7 @@ static ssize_t ilitek_proc_debug_level_read(struct file *filp,
 {
 	int ret = 0;
 	u32 len = 0;
-	struct ilitek_tddi_dev *chip_info = PDE_DATA(file_inode(filp));
+	struct ilitek_tddi_dev *chip_info = pde_data(file_inode(filp));
 
 	if (*pPos != 0) {
 		return 0;
@@ -1108,7 +1108,7 @@ static ssize_t ilitek_node_ioctl_write(struct file *filp, const char *buff,
 	u8 temp[256] = {0};
 	u32 *data = NULL;
 	u8 tp_mode;
-	struct ilitek_tddi_dev *chip_info = PDE_DATA(file_inode(filp));
+	struct ilitek_tddi_dev *chip_info = pde_data(file_inode(filp));
 
 	if (buff != NULL) {
 		if (copy_from_user(cmd, buff, size - 1)) {
@@ -1377,7 +1377,7 @@ static long ilitek_node_ioctl(struct file *filp, unsigned int cmd,
 	static u16 i2c_rw_length;
 	u32 id_to_user[3] = {0};
 	char dbg[10] = { 0 };
-	struct ilitek_tddi_dev *chip_info = PDE_DATA(file_inode(filp));
+	struct ilitek_tddi_dev *chip_info = pde_data(file_inode(filp));
 
 	if (_IOC_TYPE(cmd) != ILITEK_IOCTL_MAGIC) {
 		TPD_INFO("The Magic number doesn't match\n");

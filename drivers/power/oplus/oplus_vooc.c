@@ -1233,7 +1233,7 @@ void oplus_vooc_shedule_fastchg_work(void)
 static ssize_t proc_fastchg_fw_update_write(struct file *file, const char __user *buff,
 		size_t len, loff_t *data)
 {
-	struct oplus_vooc_chip *chip = PDE_DATA(file_inode(file));
+	struct oplus_vooc_chip *chip = pde_data(file_inode(file));
 	char write_data[32] = {0};
 
 	if (copy_from_user(&write_data, buff, len)) {
@@ -1256,7 +1256,7 @@ static ssize_t proc_fastchg_fw_update_write(struct file *file, const char __user
 static ssize_t proc_fastchg_fw_update_read(struct file *file, char __user *buff,
 		size_t count, loff_t *off)
 {
-	struct oplus_vooc_chip *chip = PDE_DATA(file_inode(file));
+	struct oplus_vooc_chip *chip = pde_data(file_inode(file));
 	char page[256] = {0};
 	char read_data[32] = {0};
 	int len = 0;

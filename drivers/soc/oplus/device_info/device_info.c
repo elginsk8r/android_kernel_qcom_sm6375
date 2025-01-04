@@ -90,7 +90,7 @@ static int devinfo_read_func(struct seq_file *s, void *v)
 
 static int device_info_open(struct inode *inode, struct file *file)
 {
-	return single_open(file, devinfo_read_func, PDE_DATA(inode));
+	return single_open(file, devinfo_read_func, pde_data(inode));
 }
 
 static const struct file_operations device_node_fops = {
@@ -113,7 +113,7 @@ static int devinfo_read_ufsplus_func(struct seq_file *s, void *v)
 
 static int device_info_for_ufsplus_open(struct inode *inode, struct file *file)
 {
-	return single_open(file, devinfo_read_ufsplus_func, PDE_DATA(inode));
+	return single_open(file, devinfo_read_ufsplus_func, pde_data(inode));
 }
 
 
@@ -139,7 +139,7 @@ static int deviceid_read_func(struct seq_file *s, void *v)
 
 static int device_id_open(struct inode *inode, struct file *file)
 {
-	return single_open(file, deviceid_read_func, PDE_DATA(inode));
+	return single_open(file, deviceid_read_func, pde_data(inode));
 }
 
 static const struct file_operations device_id_fops = {

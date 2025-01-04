@@ -752,7 +752,7 @@ static ssize_t sensor_list_read_proc(struct file *file, char __user *buf,
 {
 	char page[128] = {0};
 	int len = 0;
-	struct sensor_fb_cxt *sensor_fb_cxt = (struct sensor_fb_cxt *)PDE_DATA(
+	struct sensor_fb_cxt *sensor_fb_cxt = (struct sensor_fb_cxt *)pde_data(
 			file_inode(file));
 
 	len = snprintf(page, sizeof(page), "phy = 0x%x, virt = 0x%x\n",

@@ -630,7 +630,7 @@ void release_algorithm_points(struct touchpanel_data *ts)
 static ssize_t proc_stretch_config_read(struct file *file, char __user *buf,
 					size_t count, loff_t *ppos)
 {
-	struct touchpanel_data *ts = PDE_DATA(file_inode(file));
+	struct touchpanel_data *ts = pde_data(file_inode(file));
 	uint8_t ret = 0;
 	char *page;
 
@@ -672,7 +672,7 @@ static ssize_t proc_stretch_config_read(struct file *file, char __user *buf,
 static ssize_t proc_stretch_config_write(struct file *file,
 		const char __user *buf, size_t count, loff_t *lo)
 {
-	struct touchpanel_data *ts = PDE_DATA(file_inode(file));
+	struct touchpanel_data *ts = pde_data(file_inode(file));
 
 	char *buffer;
 
@@ -760,7 +760,7 @@ static const struct file_operations proc_stretch_config_ops = {
 static ssize_t proc_kalman_value_read(struct file *file, char __user *buf,
 				      size_t count, loff_t *ppos)
 {
-	struct touchpanel_data *ts = PDE_DATA(file_inode(file));
+	struct touchpanel_data *ts = pde_data(file_inode(file));
 	uint8_t ret = 0;
 	char *page;
 
@@ -791,7 +791,7 @@ static ssize_t proc_kalman_value_read(struct file *file, char __user *buf,
 static ssize_t proc_kalman_value_write(struct file *file,
 				       const char __user *buf, size_t count, loff_t *lo)
 {
-	struct touchpanel_data *ts = PDE_DATA(file_inode(file));
+	struct touchpanel_data *ts = pde_data(file_inode(file));
 
 	char *buffer;
 
