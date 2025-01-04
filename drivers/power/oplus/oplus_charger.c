@@ -853,10 +853,18 @@ static ssize_t proc_batt_param_noplug_read(struct file *filp,
 	return (len < count ? len : count);
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops batt_param_noplug_proc_fops = {
+    .proc_write = proc_batt_param_noplug_write,
+    .proc_read  = proc_batt_param_noplug_read,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static const struct file_operations batt_param_noplug_proc_fops = {
 	.write = proc_batt_param_noplug_write,
 	.read = proc_batt_param_noplug_read,
 };
+#endif
 
 static int init_proc_batt_param_noplug(void)
 {
@@ -917,10 +925,18 @@ static ssize_t proc_tbatt_pwroff_read(struct file *filp,
 	return (len < count ? len : count);
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops tbatt_pwroff_proc_fops = {
+    .proc_write = proc_tbatt_pwroff_write,
+    .proc_read  = proc_tbatt_pwroff_read,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static const struct file_operations tbatt_pwroff_proc_fops = {
 	.write = proc_tbatt_pwroff_write,
 	.read = proc_tbatt_pwroff_read,
 };
+#endif
 
 static int init_proc_tbatt_pwroff(void)
 {
@@ -982,10 +998,18 @@ static ssize_t chg_log_read(struct file *filp,
 	return (len < count ? len : count);
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops chg_log_proc_fops = {
+    .proc_write = chg_log_write,
+    .proc_read  = chg_log_read,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static const struct file_operations chg_log_proc_fops = {
 	.write = chg_log_write,
 	.read = chg_log_read,
 };
+#endif
 
 static int init_proc_chg_log(void)
 {
@@ -1079,10 +1103,17 @@ static ssize_t chg_cycle_write(struct file *file,
 	return count;
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops chg_cycle_proc_fops = {
+    .proc_write = chg_cycle_write,
+    .proc_lseek  = noop_llseek,
+};
+#else
 static const struct file_operations chg_cycle_proc_fops = {
 	.write = chg_cycle_write,
 	.llseek = noop_llseek,
 };
+#endif
 
 static void init_proc_chg_cycle(void)
 {
@@ -1146,10 +1177,18 @@ static ssize_t critical_log_write(struct file *filp,
 	return len;
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops chg_critical_log_proc_fops = {
+    .proc_write = critical_log_write,
+    .proc_read  = critical_log_read,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static const struct file_operations chg_critical_log_proc_fops = {
 	.write = critical_log_write,
 	.read = critical_log_read,
 };
+#endif
 
 static void init_proc_critical_log(void)
 {
@@ -1194,9 +1233,16 @@ static ssize_t rtc_reset_read(struct file *filp,
 	return (len < count ? len : count);
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops rtc_reset_det_fops = {
+    .proc_read  = rtc_reset_read,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static const struct file_operations rtc_reset_det_fops = {
 	.read = rtc_reset_read,
 };
+#endif
 
 static void init_proc_rtc_det(void)
 {
@@ -1235,10 +1281,16 @@ static ssize_t vbat_low_read(struct file *filp,
 	return (len < count ? len : count);
 }
 
-
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops vbat_low_det_fops = {
+    .proc_read  = vbat_low_read,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static const struct file_operations vbat_low_det_fops = {
 	.read = vbat_low_read,
 };
+#endif
 
 static void init_proc_vbat_low_det(void)
 {
@@ -1302,12 +1354,19 @@ static ssize_t proc_charger_factorymode_test_write
 	return count;
 }
 
-static const struct file_operations proc_charger_factorymode_test_ops =
-{
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops proc_charger_factorymode_test_ops = {
+    .proc_write  = proc_charger_factorymode_test_write,
+    .proc_open  = simple_open,
+    .proc_lseek  = seq_lseek,
+};
+#else
+static const struct file_operations proc_charger_factorymode_test_ops = {
     .write  = proc_charger_factorymode_test_write,
     .open  = simple_open,
     .owner = THIS_MODULE,
 };
+#endif
 
 static ssize_t proc_integrate_gauge_fcc_flag_read(struct file *filp,
 		char __user *buff, size_t count, loff_t *off)
@@ -1330,12 +1389,19 @@ static ssize_t proc_integrate_gauge_fcc_flag_read(struct file *filp,
 	return (len < count ? len : count);
 }
 
-static const struct file_operations proc_integrate_gauge_fcc_flag_ops =
-{
-	.read	= proc_integrate_gauge_fcc_flag_read,
-	.open	= simple_open,
-	.owner	= THIS_MODULE,
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops proc_integrate_gauge_fcc_flag_ops = {
+    .proc_read  = proc_integrate_gauge_fcc_flag_read,
+    .proc_open  = simple_open,
+    .proc_lseek  = seq_lseek,
 };
+#else
+static const struct file_operations proc_integrate_gauge_fcc_flag_ops = {
+	.read	= proc_integrate_gauge_fcc_flag_read,
+    .open  = simple_open,
+    .owner = THIS_MODULE,
+};
+#endif
 
 static ssize_t proc_hmac_write(struct file *filp,
 		const char __user *buf, size_t len, loff_t *data)
@@ -1393,11 +1459,19 @@ static ssize_t proc_hmac_read(struct file *filp,
 	return (len < count ? len : count);
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops hmac_proc_fops = {
+    .proc_write  = proc_hmac_write,
+    .proc_read  = proc_hmac_read,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static const struct file_operations hmac_proc_fops = {
 	.write = proc_hmac_write,
 	.read = proc_hmac_read,
 	.owner = THIS_MODULE,
 };
+#endif
 
 static int init_charger_proc(struct oplus_chg_chip *chip)
 {
@@ -1512,12 +1586,19 @@ static ssize_t proc_ui_soc_decimal_read(struct file *filp,
 	return (len < count ? len : count);
 }
 
-static const struct file_operations ui_soc_decimal_ops =
-{
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops ui_soc_decimal_ops = {
+    .proc_write  = proc_ui_soc_decimal_write,
+    .proc_read  = proc_ui_soc_decimal_read,
+    .proc_lseek  = seq_lseek,
+};
+#else
+static const struct file_operations ui_soc_decimal_ops = {
     .write  = proc_ui_soc_decimal_write,
     .read = proc_ui_soc_decimal_read,
-    .owner = THIS_MODULE,
+	.owner = THIS_MODULE,
 };
+#endif
 
 static int init_ui_soc_decimal_proc(struct oplus_chg_chip *chip)
 {
@@ -1663,11 +1744,21 @@ static ssize_t charging_limit_time_write(struct file *filp,
 	return len;
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops charging_limit_time_fops = {
+	.proc_open = charging_limit_time_open,
+	.proc_write = charging_limit_time_write,
+	.proc_read = seq_read,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static const struct file_operations charging_limit_time_fops = {
 	.open = charging_limit_time_open,
 	.write = charging_limit_time_write,
 	.read = seq_read,
 };
+#endif
+
 static int charging_limit_current_show(struct seq_file *seq_filp, void *v)
 {
 	seq_printf(seq_filp, "%d\n", g_charger_chip->limits.input_current_led_ma_high);
@@ -1701,11 +1792,20 @@ static ssize_t charging_limit_current_write(struct file *filp,
 	return len;
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops charging_limit_current_fops = {
+	.proc_open = charging_limit_current_open,
+	.proc_write = charging_limit_current_write,
+	.proc_read = seq_read,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static const struct file_operations charging_limit_current_fops = {
 	.open = charging_limit_current_open,
 	.write = charging_limit_current_write,
 	.read = seq_read,
 };
+#endif
 
 static void init_proc_charging_feature(void)
 {

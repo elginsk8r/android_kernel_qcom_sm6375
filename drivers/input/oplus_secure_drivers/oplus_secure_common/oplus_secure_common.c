@@ -43,6 +43,7 @@
 #include <linux/delay.h>
 #include <linux/string.h>
 #include <linux/err.h>
+#include <linux/version.h>
 #include "../include/oplus_secure_common.h"
 
 #define OEM_FUSE_OFF        "0"
@@ -188,10 +189,18 @@ static ssize_t secureType_write_proc(struct file *filp, const char __user *buf,
         return count;
 }
 
-static struct file_operations secureType_proc_fops = {
-        .read = secureType_read_proc,
-        .write = secureType_write_proc,
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops secureType_proc_fops = {
+    .proc_read  = secureType_read_proc,
+    .proc_write = secureType_write_proc,
+    .proc_lseek  = seq_lseek,
 };
+#else
+struct file_operations secureType_proc_fops = {
+    .read = secureType_read_proc,
+    .write = secureType_write_proc,
+};
+#endif
 
 static ssize_t secureSNBound_read_proc(struct file *file, char __user *buf,
                 size_t count, loff_t *off)
@@ -234,10 +243,16 @@ static ssize_t secureSNBound_read_proc(struct file *file, char __user *buf,
     return (len < count ? len : count);
 }
 
-
-static struct file_operations secureSNBound_proc_fops = {
-        .read = secureSNBound_read_proc,
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops secureSNBound_proc_fops = {
+    .proc_read  = secureSNBound_read_proc,
+    .proc_lseek  = seq_lseek,
 };
+#else
+struct file_operations secureSNBound_proc_fops = {
+    .read = secureSNBound_read_proc,
+};
+#endif
 
 static int secure_register_proc_fs(struct secure_data *secure_data)
 {

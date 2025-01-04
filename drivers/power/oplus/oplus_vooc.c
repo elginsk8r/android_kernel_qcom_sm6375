@@ -14,6 +14,7 @@
 #include <linux/delay.h>
 #include <linux/proc_fs.h>
 #include <linux/uaccess.h>
+#include <linux/version.h>
 
 #include "oplus_charger.h"
 #include "oplus_vooc.h"
@@ -1279,11 +1280,18 @@ static ssize_t proc_fastchg_fw_update_read(struct file *file, char __user *buff,
 	return (len < count ? len : count);
 }
 
-
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops fastchg_fw_update_proc_fops = {
+    .proc_read  = proc_fastchg_fw_update_read,
+    .proc_write  = proc_fastchg_fw_update_write,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static const struct file_operations fastchg_fw_update_proc_fops = {
 	.write = proc_fastchg_fw_update_write,
 	.read  = proc_fastchg_fw_update_read,
 };
+#endif
 
 static int init_proc_fastchg_fw_update(struct oplus_vooc_chip *chip)
 {

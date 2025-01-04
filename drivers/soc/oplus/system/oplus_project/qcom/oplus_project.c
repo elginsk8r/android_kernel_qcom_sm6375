@@ -13,6 +13,7 @@
 #include <linux/io.h>
 #include <linux/of.h>
 #include <linux/syscalls.h>
+#include <linux/version.h>
 
 #include <soc/oplus/system/oplus_project.h>
 
@@ -520,12 +521,21 @@ static int projects_open(struct inode *inode, struct file *file)
     return single_open(file, project_read_func, pde_data(inode));
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops project_info_fops = {
+    .proc_open  = projects_open,
+    .proc_read  = seq_read,
+    .proc_release = single_release,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static const struct file_operations project_info_fops = {
     .owner = THIS_MODULE,
     .open  = projects_open,
     .read  = seq_read,
     .release = single_release,
 };
+#endif
 
 static int __init oplus_project_init(void)
 {

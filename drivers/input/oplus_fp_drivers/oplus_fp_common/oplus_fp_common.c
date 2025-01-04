@@ -15,6 +15,7 @@
 #include <linux/string.h>
 #include <linux/mutex.h>
 #include <linux/module.h>
+#include <linux/version.h>
 #include "../include/oplus_fp_common.h"
 //extern char *saved_command_line;
 
@@ -142,10 +143,18 @@ static ssize_t fp_id_node_write(struct file *file, const char __user *buf, size_
     return count;
 }
 
-static struct file_operations fp_id_node_ctrl = {
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops fp_id_node_ctrl = {
+    .proc_read  = fp_id_node_read,
+    .proc_write = fp_id_node_write,
+    .proc_lseek  = seq_lseek,
+};
+#else
+struct file_operations fp_id_node_ctrl = {
     .read = fp_id_node_read,
     .write = fp_id_node_write,
 };
+#endif
 
 void opticalfp_irq_handler_register(opticalfp_handler handler) {
     if (handler) {
@@ -304,11 +313,18 @@ static ssize_t lcd_type_node_read(struct file *file, char __user *buf, size_t co
     return len < count ? len  : count;
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops lcd_type_node_ctrl = {
+	.proc_write = NULL,
+	.proc_read  = lcd_type_node_read,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static struct file_operations lcd_type_node_ctrl = {
     .read = lcd_type_node_read,
     .write = NULL,
 };
-
+#endif
 
 static int lcd_type_register_proc_fs(void)
 {

@@ -3,6 +3,8 @@
  * Copyright (C) 2018-2020 Oplus. All rights reserved.
  */
 
+#include <linux/version.h>
+
 #include "ili7807s.h"
 
 #define USER_STR_BUFF       PAGE_SIZE
@@ -2538,10 +2540,87 @@ static struct proc_dir_entry *proc_dir_ilitek;
 typedef struct {
 	char *name;
 	struct proc_dir_entry *node;
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+	struct proc_ops *fops;
+#else
 	struct file_operations *fops;
+#endif
 	bool is_created;
 } proc_node;
 
+
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static struct proc_ops proc_ver_info_fops = {
+    .proc_read  = ilitek_node_ver_info_read,
+    .proc_lseek  = seq_lseek,
+};
+
+static struct proc_ops proc_change_list_fops = {
+	.proc_read = ilitek_node_change_list_read,
+    .proc_lseek  = seq_lseek,
+};
+
+static struct proc_ops proc_debug_message_fops = {
+	.proc_read = ilitek_proc_debug_message_read,
+    .proc_lseek  = seq_lseek,
+};
+
+static struct proc_ops proc_debug_message_switch_fops = {
+	.proc_read = ilitek_proc_debug_switch_read,
+    .proc_lseek  = seq_lseek,
+};
+
+static struct proc_ops proc_ioctl_fops = {
+	.proc_ioctl = ilitek_node_ioctl,
+#ifdef CONFIG_COMPAT
+	.proc_compat_ioctl = ilitek_node_compat_ioctl,
+#endif
+	.proc_write = ilitek_node_ioctl_write,
+    .proc_lseek  = seq_lseek,
+};
+
+static struct proc_ops proc_fw_upgrade_fops = {
+	.proc_read = ilitek_node_fw_upgrade_read,
+    .proc_lseek  = seq_lseek,
+};
+
+static struct proc_ops proc_fw_process_fops = {
+	.proc_read = ilitek_proc_fw_process_read,
+    .proc_lseek  = seq_lseek,
+};
+
+static struct proc_ops proc_get_delta_data_fops = {
+	.proc_read = ilitek_proc_get_delta_data_read,
+    .proc_lseek  = seq_lseek,
+};
+
+static struct proc_ops proc_get_raw_data_fops = {
+	.proc_read = ilitek_proc_fw_get_raw_data_read,
+    .proc_lseek  = seq_lseek,
+};
+
+static struct proc_ops proc_rw_tp_reg_fops = {
+	.proc_read = ilitek_proc_rw_tp_reg_read,
+	.proc_write = ilitek_proc_rw_tp_reg_write,
+    .proc_lseek  = seq_lseek,
+};
+
+static struct proc_ops proc_fw_pc_counter_fops = {
+	.proc_read = ilitek_proc_fw_pc_counter_read,
+    .proc_lseek  = seq_lseek,
+};
+
+static struct proc_ops proc_get_debug_mode_data_fops = {
+	.proc_read = ilitek_proc_get_debug_mode_data_read,
+	.proc_write = ilitek_proc_get_debug_mode_data_write,
+    .proc_lseek  = seq_lseek,
+};
+
+static struct proc_ops proc_debug_level_fops = {
+	.proc_read = ilitek_proc_debug_level_read,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static struct file_operations proc_ver_info_fops = {
 	.read = ilitek_node_ver_info_read,
 };
@@ -2599,6 +2678,7 @@ static struct file_operations proc_get_debug_mode_data_fops = {
 static struct file_operations proc_debug_level_fops = {
 	.read = ilitek_proc_debug_level_read,
 };
+#endif
 
 proc_node iliproc[] = {
 	{"ioctl", NULL, &proc_ioctl_fops, false},

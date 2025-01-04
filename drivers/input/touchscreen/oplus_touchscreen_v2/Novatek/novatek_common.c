@@ -6,6 +6,7 @@
 #include "../touchpanel_common.h"
 #include "novatek_common.h"
 #include <linux/module.h>
+#include <linux/version.h>
 
 /*******LOG TAG Declear*****************************/
 #ifdef TPD_DEVICE
@@ -104,11 +105,19 @@ static ssize_t nvt_flash_read(struct file *filp, char __user *buff,
 	}
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops nvt_flash_fops = {
+    .proc_open  = simple_open,
+    .proc_read  = nvt_flash_read,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static const struct file_operations nvt_flash_fops = {
 	.owner = THIS_MODULE,
 	.open = simple_open,
 	.read = nvt_flash_read,
 };
+#endif
 
 static ssize_t nvt_noflash_read(struct file *filp, char __user *buff,
 				size_t count, loff_t *offp)
@@ -231,11 +240,19 @@ out:
 	return ret;
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops nvt_noflash_fops = {
+    .proc_open  = simple_open,
+    .proc_read  = nvt_noflash_read,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static const struct file_operations nvt_noflash_fops = {
 	.owner = THIS_MODULE,
 	.open = simple_open,
 	.read = nvt_noflash_read,
 };
+#endif
 
 void nvt_flash_proc_init(struct touchpanel_data *ts, const char *name)
 {

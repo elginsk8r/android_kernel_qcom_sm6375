@@ -292,12 +292,21 @@ static ssize_t kernel_fb_read(struct file *file,
 	return count;
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops kern_fb_fops = {
+	.proc_write = kernel_fb_write,
+	.proc_read  = kernel_fb_read,
+    .proc_open  = simple_open,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static const struct file_operations kern_fb_fops = {
 	.write = kernel_fb_write,
 	.read  = kernel_fb_read,
 	.open  = simple_open,
 	.owner = THIS_MODULE,
 };
+#endif
 
 static int __init kernel_fb_init(void)
 {

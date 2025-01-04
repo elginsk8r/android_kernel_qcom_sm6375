@@ -19,6 +19,7 @@
 #include <linux/list.h>
 #include <linux/iio/consumer.h>
 #include <linux/of_fdt.h>
+#include <linux/version.h>
 
 #define DEVINFO_NAME "devinfo"
 
@@ -93,12 +94,21 @@ static int device_info_open(struct inode *inode, struct file *file)
 	return single_open(file, devinfo_read_func, pde_data(inode));
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops device_node_fops = {
+    .proc_open  = device_info_open,
+    .proc_read  = seq_read,
+    .proc_release = single_release,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static const struct file_operations device_node_fops = {
 	.owner = THIS_MODULE,
 	.open = device_info_open,
 	.read = seq_read,
 	.release = single_release,
 };
+#endif
 
 static int devinfo_read_ufsplus_func(struct seq_file *s, void *v)
 {
@@ -116,13 +126,21 @@ static int device_info_for_ufsplus_open(struct inode *inode, struct file *file)
 	return single_open(file, devinfo_read_ufsplus_func, pde_data(inode));
 }
 
-
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops device_node_for_ufsplus_fops = {
+    .proc_open  = device_info_for_ufsplus_open,
+    .proc_read  = seq_read,
+    .proc_release = single_release,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static const struct file_operations device_node_for_ufsplus_fops = {
 	.owner = THIS_MODULE,
 	.open = device_info_for_ufsplus_open,
 	.read = seq_read,
 	.release = single_release,
 };
+#endif
 
 static int deviceid_read_func(struct seq_file *s, void *v)
 {
@@ -142,12 +160,21 @@ static int device_id_open(struct inode *inode, struct file *file)
 	return single_open(file, deviceid_read_func, pde_data(inode));
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops device_id_fops = {
+    .proc_open  = device_id_open,
+    .proc_read  = seq_read,
+    .proc_release = single_release,
+    .proc_lseek  = seq_lseek,
+};
+#else
 static const struct file_operations device_id_fops = {
 	.owner = THIS_MODULE,
 	.open = device_id_open,
 	.read = seq_read,
 	.release = single_release,
 };
+#endif
 
 int register_device_id(struct device_info *dev_info, const char *label, const char *id_match, int id)
 {
@@ -257,10 +284,19 @@ static ssize_t fork_para_monitor_read_proc(struct file *file, char __user *buf,
         return ret;
 }
 
-struct file_operations fork_para_monitor_proc_fops = {
-        .read = fork_para_monitor_read_proc,
-        .write = NULL,
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0))
+static const struct proc_ops fork_para_monitor_proc_fops = {
+    .proc_read  = fork_para_monitor_read_proc,
+    .proc_write = NULL,
+    .proc_lseek  = seq_lseek,
 };
+#else
+struct file_operations fork_para_monitor_proc_fops = {
+    .read = fork_para_monitor_read_proc,
+    .write = NULL,
+    .proc_lseek  = seq_lseek,
+};
+#endif
 
 static void recursive_fork_para_monitor(void)
 {
