@@ -6912,7 +6912,7 @@ ts_malloc_failed:
 	TPD_INFO("%s, probe error\n", __func__);
 	return ret;
 }
-int nvt_tp_remove(struct spi_device *client)
+void nvt_tp_remove(struct spi_device *client)
 {
 	struct touchpanel_data *ts = spi_get_drvdata(client);
 
@@ -6923,8 +6923,6 @@ int nvt_tp_remove(struct spi_device *client)
 		common_touch_data_free(ts);
 		tp_kfree((void **)&ts);
 	}
-
-	return 0;
 }
 
 static int nvt_spi_suspend(struct device *dev)

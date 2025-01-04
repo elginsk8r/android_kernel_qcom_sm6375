@@ -3869,14 +3869,13 @@ err_out:
 	return ret;
 }
 
-int ilitek7807s_spi_remove(struct spi_device *spi)
+void ilitek7807s_spi_remove(struct spi_device *spi)
 {
 	struct touchpanel_data *ts = spi_get_drvdata(spi);
 	ILI_INFO("\n");
 	spi_set_drvdata(spi, NULL);
 	ili_kfree((void **)&ts);
 	ilitek_free_global_data();
-	return 0;
 }
 static int ilitek_spi_resume(struct device *dev)
 {
