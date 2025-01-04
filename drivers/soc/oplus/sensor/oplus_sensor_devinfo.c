@@ -658,7 +658,7 @@ static void oplus_sensor_parse_dts(struct platform_device *pdev)
         } else {
             chip->a_vector[sensor_type].sensor_id = sensor_type;
             SENSOR_DEVINFO_DEBUG("chip->a_vector[%d].sensor_id : sensor_type %d",
-                sensor_type, chip->a_vector[sensor_type].sensor_id, sensor_type);
+                sensor_type, chip->a_vector[sensor_type].sensor_id);
             algo = &chip->a_vector[sensor_type];
             parse_each_virtual_sensor_dts(algo, ch_node);
         }
