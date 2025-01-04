@@ -539,58 +539,6 @@ static void dump_secure_stage(struct seq_file *s)
     seq_printf(s, "%d", secure_oem_config);
 }
 
-static void update_manifest(struct proc_dir_entry *parent_1, struct proc_dir_entry *parent_2)
-{
-    static const char* manifest_src[2] = {
-        "/vendor/odm/etc/vintf/manifest_ssss.xml",
-        "/vendor/odm/etc/vintf/manifest_dsds.xml",
-    };
-    mm_segment_t fs;
-    char * substr = strstr(boot_command_line, "simcardnum.doublesim=");
-
-    if(!substr)
-        return;
-
-    substr += strlen("simcardnum.doublesim=");
-
-    fs = get_fs();
-    set_fs(KERNEL_DS);
-
-    if (parent_1 && parent_2) {
-        if (substr[0] == '0') {
-            proc_symlink("manifest", parent_1, manifest_src[0]);//single sim
-            proc_symlink("manifest", parent_2, manifest_src[0]);
-        }
-        else {
-            proc_symlink("manifest", parent_1, manifest_src[1]);
-            proc_symlink("manifest", parent_2, manifest_src[1]);
-        }
-    }
-
-    set_fs(fs);
-}
-
-static int __init update_feature(void)
-{
-    mm_segment_t fs;
-    fs = get_fs();
-    pr_err("%s: newcdt --  Operator Version [%d]\n", __func__, (get_project()));
-    set_fs(KERNEL_DS);
-    if (oplus_info) {
-        if (get_oplus_feature(1) & 0x01) {
-            proc_symlink(nfc_feature, oplus_info, feature_src);
-        }
-    }
-    if (oplus_info_temp) {
-        if (get_oplus_feature(1) & 0x01) {
-            proc_symlink(nfc_feature, oplus_info_temp, feature_src);
-        }
-    }
-    set_fs(fs);
-    return 0;
-}
-late_initcall(update_feature);
-
 static int project_read_func(struct seq_file *s, void *v)
 {
     void *p = s->private;
@@ -744,9 +692,6 @@ static int __init oplus_project_init(void)
     if (!p_entry)
         goto error_init;
 
-    /*update single or double cards*/
-    //update_manifest(oplus_info);
-
     p_entry = proc_create_data("prjName", S_IRUGO, oplus_info_temp, &project_info_fops, UINT2Ptr(PROJECT_VERSION));
     if (!p_entry)
         goto error_init;
@@ -810,9 +755,6 @@ static int __init oplus_project_init(void)
     p_entry = proc_create_data("test", S_IRUGO, oplus_info_temp, &project_info_fops, UINT2Ptr(PROJECT_TEST));
     if (!p_entry)
         goto error_init;
-
-    /*update single or double cards*/
-    update_manifest(oplus_info, oplus_info_temp);
 
     return 0;
 
