@@ -177,6 +177,7 @@ static void init_project_version(void)
 }
 
 static bool cdt_integrity = false;
+#if IS_BUILTIN(CONFIG_OPLUS_FEATURE_OPROJECT)
 static int __init cdt_setup(char *str)
 {
     if (str[0] == '1')
@@ -185,6 +186,7 @@ static int __init cdt_setup(char *str)
     return 1;
 }
 __setup("cdt_integrity=", cdt_setup);
+#endif
 
 unsigned int get_project(void)
 {
