@@ -19,6 +19,7 @@
 #include <linux/list.h>
 #include <linux/iio/consumer.h>
 #include <linux/of_fdt.h>
+#include <soc/qcom/of_common.h>
 #include <linux/version.h>
 
 #define DEVINFO_NAME "devinfo"
