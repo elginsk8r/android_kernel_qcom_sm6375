@@ -2,7 +2,7 @@ config OPLUS_FEATURE_ACM
 	bool "Enable Access Control Module"
 	depends on OPLUS_SYSTEM_KERNEL
 	default n
-	---help---
+	help
 	  Access Control Module device driver. The purpose of this module
 	  is to prevent third-party apps from deleting media files illegally.
 	  This module maintains a white list of apps. Apps in the whitelist
@@ -14,5 +14,5 @@ config OPLUS_FEATURE_ACM_LOGGING
 	bool "Enable ACM logging features"
 	depends on OPLUS_FEATURE_ACM
 	default n
-	---help---
+	help
 	  Enable logging features for ACM. Report delete information to Quality.
