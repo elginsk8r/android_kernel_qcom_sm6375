@@ -26,7 +26,8 @@ extern char bootmode[];
 int __init  board_ftm_mode_init(void)
 {
 #if IS_MODULE(CONFIG_OPLUS_FEATURE_PROJECTINFO)
-	if(oplus_ftm_mode != NULL) {
+	size_t len = strlen(oplus_ftm_mode);
+	if(len > 0) {
 		pr_err("oplus_ftm_mode from cmdline : %s\n",oplus_ftm_mode);
 		if (strcmp(oplus_ftm_mode, "factory2") == 0) {
 			ftm_mode = MSM_BOOT_MODE__FACTORY;
@@ -112,7 +113,8 @@ char pwron_event[MAX_CMD_LENGTH + 1];
 static int __init start_reason_init(void)
 {
 #if IS_MODULE(CONFIG_OPLUS_FEATURE_PROJECTINFO)	
-	if(startup_mode != NULL) {
+	size_t len = strlen(startup_mode);
+	if(len > 0) {
 		pr_err("startup_mode from cmdline : %s\n",startup_mode);
 		strcpy(pwron_event, startup_mode);
 		pwron_event[strlen(startup_mode)] = '\0';
@@ -181,7 +183,8 @@ EXPORT_SYMBOL(qpnp_is_charger_reboot);
 static int __init oplus_charger_reboot(void)
 {
 #if IS_MODULE(CONFIG_OPLUS_FEATURE_PROJECTINFO)
-	if(charger_present != NULL) {
+	size_t len = strlen(charger_present);
+	if(len > 0) {
 		pr_err("charger present from cmdline : %s\n", charger_present);
 		strcpy(charger_reboot, charger_present);
 		charger_reboot[strlen(charger_present)] = '\0';
@@ -204,7 +207,8 @@ static int __init oplus_charger_reboot(void)
 int __init  board_boot_mode_init(void)
 {
 #if IS_MODULE(CONFIG_OPLUS_FEATURE_PROJECTINFO)
-	if(bootmode != NULL) {
+	size_t len = strlen(bootmode);
+	if(len > 0) {
 		pr_err("mode from cmdline : %s\n", bootmode);
 		strcpy(boot_mode, bootmode);
 		boot_mode[strlen(bootmode)] = '\0';
