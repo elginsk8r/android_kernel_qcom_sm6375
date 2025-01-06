@@ -406,7 +406,7 @@ static int ili_spi_wrapper(u8 *txbuf, u32 wlen, u8 *rxbuf, u32 rlen,
 		if (!rlen) {
 			break;
 		}
-
+		fallthrough;
 	case SPI_READ:
 		if (!ice && spi_irq) {
 			/* Check INT triggered by FW when sending cmds. */
