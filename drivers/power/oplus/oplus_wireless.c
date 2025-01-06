@@ -274,7 +274,7 @@ void oplus_wpc_set_wrx_en_value(int value)
 {
 	struct oplus_wpc_chip *chip = g_wpc_chip;
 	if (!chip) {
-		printk(KERN_ERR "[OPLUS_CHG][%s]: oplus_wpc_chip not ready!\n", __func__);
+		chg_err("oplus_wpc_chip not ready!\n");
 		return;
 	}
 	if (chip->wpc_gpios.wrx_en_gpio <= 0) {
@@ -304,7 +304,7 @@ int oplus_wpc_get_wrx_en_val(void)
 {
 	struct oplus_wpc_chip *chip = g_wpc_chip;
 	if (!chip) {
-		chg_err("oplus_wpc_chip not ready!\n", __func__);
+		chg_err("oplus_wpc_chip not ready!\n");
 		return 0;
 	}
 	if (chip->wpc_gpios.wrx_en_gpio <= 0) {
@@ -324,7 +324,7 @@ int oplus_wpc_get_wrx_otg_en_val(void)
 {
 	struct oplus_wpc_chip *chip = g_wpc_chip;
 	if (!chip) {
-		chg_err("oplus_wpc_chip not ready!\n", __func__);
+		chg_err("oplus_wpc_chip not ready!\n");
 		return 0;
 	}
 	if (chip->wpc_gpios.wrx_otg_en_gpio <= 0) {
@@ -344,7 +344,7 @@ void oplus_wpc_set_wrx_otg_en_value(int value)
 {
 	struct oplus_wpc_chip *chip = g_wpc_chip;
 	if (!chip) {
-		printk(KERN_ERR "[OPLUS_CHG][%s]: oplus_wpc_chip not ready!\n", __func__);
+		chg_err("oplus_wpc_chip not ready!\n");
 		return;
 	}
 	if (chip->wpc_gpios.wrx_otg_en_gpio <= 0) {
