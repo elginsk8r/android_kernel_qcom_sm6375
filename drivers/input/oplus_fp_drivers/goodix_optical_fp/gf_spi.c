@@ -27,8 +27,6 @@
 #include <linux/regulator/consumer.h>
 #include <linux/of_gpio.h>
 #include <linux/timer.h>
-#include <linux/notifier.h>
-#include <linux/fb.h>
 #include <linux/pm_qos.h>
 #include <linux/cpufreq.h>
 
@@ -41,10 +39,6 @@
 #elif defined(USE_PLATFORM_BUS)
 #include <linux/platform_device.h>
 #endif
-//#ifdef CONFIG_DRM_MSM
-#if IS_ENABLED(CONFIG_DRM_OPLUS_NOTIFY) || IS_ENABLED(CONFIG_DRM_MSM)
-#include <linux/msm_drm_notify.h>
-#endif //IS_ENABLED(CONFIG_DRM_OPLUS_NOTIFY) || IS_ENABLED(CONFIG_DRM_MSM)
 #include <soc/oplus/boot_mode.h>
 #include <linux/version.h>
 
@@ -593,78 +587,6 @@ static const struct file_operations gf_fops = {
 #endif
 };
 
-static int goodix_fb_state_chg_callback(struct notifier_block *nb,
-        unsigned long val, void *data)
-{
-    struct gf_dev *gf_dev;
-    struct fb_event *evdata = data;
-    unsigned int blank;
-    char msg = 0;
-    int retval = 0;
-
-    gf_dev = container_of(nb, struct gf_dev, notifier);
-
-    if (val == MSM_DRM_ONSCREENFINGERPRINT_EVENT) {
-        uint8_t op_mode = 0x0;
-        op_mode = *(uint8_t *)evdata->data;
-
-        switch (op_mode) {
-            case 0:
-                pr_info("[%s] UI disappear\n", __func__);
-                break;
-            case 1:
-                pr_info("[%s] UI ready \n", __func__);
-                msg = GF_NET_EVENT_UI_READY;
-                sendnlmsg(&msg);
-                break;
-            default:
-                pr_info("[%s] Unknown MSM_DRM_ONSCREENFINGERPRINT_EVENT\n", __func__);
-                break;
-        }
-        return retval;
-    }
-
-    if (evdata && evdata->data && val == FB_EARLY_EVENT_BLANK && gf_dev) {
-        blank = *(int *)(evdata->data);
-        switch (blank) {
-            case FB_BLANK_POWERDOWN:
-                if (gf_dev->device_available == 1) {
-                    gf_dev->fb_black = 1;
-#if defined(GF_NETLINK_ENABLE)
-                    msg = GF_NET_EVENT_FB_BLACK;
-                    sendnlmsg(&msg);
-#elif defined (GF_FASYNC)
-                    if (gf_dev->async) {
-                        kill_fasync(&gf_dev->async, SIGIO, POLL_IN);
-                    }
-#endif
-                }
-                break;
-            case FB_BLANK_UNBLANK:
-                if (gf_dev->device_available == 1) {
-                    gf_dev->fb_black = 0;
-#if defined(GF_NETLINK_ENABLE)
-                    msg = GF_NET_EVENT_FB_UNBLACK;
-                    sendnlmsg(&msg);
-#elif defined (GF_FASYNC)
-                    if (gf_dev->async) {
-                        kill_fasync(&gf_dev->async, SIGIO, POLL_IN);
-                    }
-#endif
-                }
-                break;
-            default:
-                pr_info("%s defalut\n", __func__);
-                break;
-        }
-    }
-    return NOTIFY_OK;
-}
-
-static struct notifier_block goodix_noti_block = {
-    .notifier_call = goodix_fb_state_chg_callback,
-};
-
 static int gf_opticalfp_irq_handler(struct fp_underscreen_info *tp_info)
 {
     char msg = 0;
@@ -772,19 +694,6 @@ static int gf_probe(struct platform_device *pdev)
     spi_clock_set(gf_dev, 1000000);
 #endif
 
-    gf_dev->notifier = goodix_noti_block;
-//#if defined(CONFIG_DRM_MSM)
-#if IS_ENABLED(CONFIG_DRM_OPLUS_NOTIFY) || IS_ENABLED(CONFIG_DRM_MSM)
-    status = msm_drm_register_client(&gf_dev->notifier);
-    if (status == -1) {
-        return status;
-    }
-#elif defined(CONFIG_FB)
-    status = fb_register_client(&gf_dev->notifier);
-    if (status == -1) {
-        return status;
-    }
-#endif //IS_ENABLED(CONFIG_DRM_OPLUS_NOTIFY) || IS_ENABLED(CONFIG_DRM_MSM)
     wake_lock_init(&fp_wakelock, WAKE_LOCK_SUSPEND, "fp_wakelock");
     wake_lock_init(&gf_cmd_wakelock, WAKE_LOCK_SUSPEND, "gf_cmd_wakelock");
     pr_err("register goodix_fp_ok\n");
@@ -850,7 +759,6 @@ static int gf_remove(struct platform_device *pdev)
     wake_lock_destroy(&fp_wakelock);
     wake_lock_destroy(&gf_cmd_wakelock);
 
-    fb_unregister_client(&gf_dev->notifier);
     if (gf_dev->input)
         input_unregister_device(gf_dev->input);
     input_free_device(gf_dev->input);
