@@ -38,6 +38,7 @@
 #include <linux/interrupt.h>
 #include <linux/slab.h>
 #include <linux/sched.h>
+#include <linux/sched/clock.h>
 #include <linux/kthread.h>
 #include <linux/of.h>
 
